@@ -6,7 +6,7 @@
 #' @importFrom htmltools htmlDependency tags
 #'
 #' @export
-withchildrenInput <- function(inputId, default = "") {
+withchildrenInput <- function(inputId, default = "", attribs = list(), children = list()) {
   reactR::createReactShinyInput(
     inputId,
     "withchildren",
@@ -18,8 +18,8 @@ withchildrenInput <- function(inputId, default = "") {
       script = "withchildren.js"
     ),
     default,
-    list(),
-    htmltools::tags$span
+    configuration = list(attribs = attribs, children = children),
+    htmltools::tags$div
   )
 }
 
