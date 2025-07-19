@@ -14,7 +14,7 @@ withchildrenInput <- function(inputId, default = "", attribs = list(), children 
       name = "withchildren-input",
       version = "1.0.0",
       src = "www/tester/withchildren",
-      package = "tester",
+      package = "inputtester",
       script = "withchildren.js"
     ),
     default,
@@ -29,7 +29,33 @@ withchildrenInput <- function(inputId, default = "", attribs = list(), children 
 #'
 #' @export
 updateWithchildrenInput <- function(session, inputId, value, configuration = NULL) {
+  if(!is.null(session)) {
+    session <- shiny::getDefaultReactiveDomain()
+  }
   message <- list(value = value)
-  if (!is.null(configuration)) message$configuration <- configuration
+# browser()
+  # check for any html dependencies in the children
+  if (!is.null(configuration)) {
+    deps <- NULL
+    if(!is.null(configuration$children)) {
+      # collect all dependencies from the children list
+      #   I checked to make sure this does not need to be wrapped with tagList
+      deps <- htmltools::resolveDependencies(htmltools::findDependencies(configuration$children))
+      if(!is.null(deps)) {
+        # use shiny::createWebDependency to addResourcePath and transform
+        #   the dependency into its proper form for use in JavaScript
+        deps <- lapply(deps, shiny::createWebDependency)
+      }
+      configuration$deps <- deps
+    }
+
+    # probably should remove dependencies from the children
+    #   but for now we know the new hydrate will throw them out
+    #   for security reasons the old dependencies will not have been scrubbed
+    #   and might contain information that could leak
+    #   see ?shiny::createWebDependency
+
+    message$configuration <- configuration
+  }
   session$sendInputMessage(inputId, message);
 }

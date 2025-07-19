@@ -1,6 +1,6 @@
-Package: tester
+Package: inputtester
 Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "First",
            family = "Last",
@@ -15,4 +15,4 @@ Imports:
     htmltools,
     shiny,
     reactR
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
